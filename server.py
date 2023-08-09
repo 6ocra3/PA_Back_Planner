@@ -8,7 +8,7 @@ import argparse
 # from flask_cors import CORS
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
-from DB.client.client import MySQLConnection
+# from DB.client.client import MySQLConnection
 class MySQLConnection:
     def __init__(self, host, user, password, db_name, rebuild_db=False):
         self.host = host
