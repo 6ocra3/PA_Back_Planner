@@ -14,7 +14,7 @@ from DB.interaction.interaction import DbInteraction
 class Server:
     def __init__(self):
         self.app = Flask(__name__)
-        CORS(self.app)
+        CORS(self.app, origins="https://planner-gray.vercel.app")
         rebuild_db=True
         self.db = DbInteraction(
         host="6ocra3.mysql.pythonanywhere-services.com",
