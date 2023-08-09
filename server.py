@@ -15,7 +15,7 @@ class Server:
         # CORS(self.app)
         self.app.add_url_rule("/", view_func=self.hello_world)
 
-    def hello_world():
+    def hello_world(self):
         return {"id": 5}, 200 
 # parser = argparse.ArgumentParser()
 # parser.add_argument("--config", type=str, dest="config")
