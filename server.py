@@ -5,7 +5,7 @@ from flask import Flask, request
 import json
 import threading
 import argparse
-# from flask_cors import CORS
+from flask_cors import CORS
 from sqlalchemy.orm import sessionmaker
 from DB.client.client import MySQLConnection
 from DB.models.models import Tasks
@@ -14,7 +14,7 @@ from DB.interaction.interaction import DbInteraction
 class Server:
     def __init__(self):
         self.app = Flask(__name__)
-        # CORS(self.app)
+        CORS(self.app)
         rebuild_db=True
         self.db = DbInteraction(
         host="6ocra3.mysql.pythonanywhere-services.com",
