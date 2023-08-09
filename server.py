@@ -15,13 +15,21 @@ class Server:
     def __init__(self):
         self.app = Flask(__name__)
         # CORS(self.app)
+        rebuild_db=True
         self.db = DbInteraction(
         host="6ocra3.mysql.pythonanywhere-services.com",
         user="6ocra3",
         password="d3e-Gmb-LN8-EnP",
         db_name="6ocra3$planner_db",
-        rebuild_db=True
+        rebuild_db=rebuild_db
         )
+
+        if rebuild_db:
+            self.db.create_week("2022-07-03")
+            self.db.create_task(task="Hello world1", date="2022-07-03", column=1)
+            self.db.create_task(task="Hello world2", date="2022-07-03", column=0)
+            self.db.create_task(task="Hello world3", date="2022-07-03", column=0)
+
         self.app.add_url_rule("/shutdown", view_func=self.shutdown)
         self.app.add_url_rule("/", view_func=self.hello_world)
         self.app.add_url_rule("/home", view_func=self.get_home)
