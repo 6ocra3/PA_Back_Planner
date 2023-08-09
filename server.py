@@ -10,18 +10,6 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from DB.client.client import MySQLConnection
 from DB.interaction.interaction import DbInteraction
-# class DbInteraction:
-#     def __init__(self, host, user, password, db_name, rebuild_db=False):
-#         self.mysql_connection = MySQLConnection(
-#             host=host,
-#             # port=port,
-#             user=user,
-#             password=password,
-#             db_name=db_name,
-#             rebuild_db=rebuild_db,
-#         )
-#         self.engine = self.mysql_connection.connection.engine
-        
 
 class Server:
     def __init__(self):
