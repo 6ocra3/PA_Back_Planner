@@ -8,6 +8,7 @@ import argparse
 # from flask_cors import CORS
 from sqlalchemy.orm import sessionmaker
 from DB.client.client import MySQLConnection
+from DB.models.models import Tasks
 from DB.interaction.interaction import DbInteraction
 
 class Server:
