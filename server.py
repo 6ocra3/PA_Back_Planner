@@ -25,6 +25,6 @@ class Server:
         self.app.add_url_rule("/", view_func=self.hello_world)
 
     def hello_world(self):
-        return {"id": 6}, 200 
+        return {"id": 7}, 200 
 server = Server()
 app = server.app
