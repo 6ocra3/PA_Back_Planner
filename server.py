@@ -31,7 +31,7 @@ class Server:
             self.db.create_task(task="Hello world3", date="2022-07-03", column=0)
 
         self.app.add_url_rule("/shutdown", view_func=self.shutdown)
-        self.app.add_url_rule("/", view_func=self.hello_world)
+        self.app.add_url_rule("/", view_func=self.get_home)
         self.app.add_url_rule("/home", view_func=self.get_home)
         self.app.add_url_rule("/create_task", view_func=self.create_task, methods=["POST"] )
         self.app.add_url_rule("/create_week", view_func=self.create_week, methods=["POST"] )
@@ -42,7 +42,13 @@ class Server:
         self.app.add_url_rule("/get_week/<date>", view_func=self.get_week)
         self.app.add_url_rule("/edit_task_status", view_func=self.edit_task_status, methods=["PUT"])
         self.app.add_url_rule("/edit_task_day", view_func=self.edit_task_day, methods=["PUT"])
+        self.app.add_url_rule("/delete_task", view_func=self.delete_task, methods=["DELETE"] )
     
+    def delete_task(self):
+        request_body = dict(request.json)
+        task_id = request_body["id"]
+        return self.db.delete_task(task_id=task_id)
+
     def hello_world(self):
         return "LET'S GO!!!"
 

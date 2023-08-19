@@ -11,10 +11,10 @@ from DB.exceptions import UserNotFoundException
 
 
 class DbInteraction:
-    def __init__(self, host, user, password, db_name, rebuild_db=False):
+    def __init__(self, host, port, user, password, db_name, rebuild_db=False):
         self.mysql_connection = MySQLConnection(
             host=host,
-            # port=port,
+            port=port,
             user=user,
             password=password,
             db_name=db_name,
@@ -38,7 +38,7 @@ class DbInteraction:
         else:
             self.mysql_connection.execute_query("DROP TABLE IF EXISTS weeks")
             Base.metadata.tables["weeks"].create(self.engine)
-    
+
     def create_week(self, date):
         week = Weeks(
             date = date,
@@ -48,6 +48,16 @@ class DbInteraction:
         self.mysql_connection.session.add(week)
         return self.get_week(date)
     
+    def delete_task(self, task_id):
+        task = self.mysql_connection.session.query(Tasks).filter_by(id=task_id).first()
+        if task:
+            self.mysql_connection.session.begin()
+            self.mysql_connection.session.delete(task)
+            self.mysql_connection.session.commit()
+            return "Success", 200
+        else:
+            return "Error", 404
+
     def create_task(self, task, date, column):
         week = self.mysql_connection.session.query(Weeks).filter_by(date=date).first()
         self.mysql_connection.session.begin()
@@ -78,11 +88,11 @@ class DbInteraction:
         task = self.mysql_connection.session.query(Tasks).filter_by(id=task_id).first()
         if task:
             self.mysql_connection.session.expire_all()
-            return {"id": task.id, "task": task.task, "status": task.status, "days": task.days, "week_id": task.week_id}
+            return {"id": task.id, "task": task.task, "status": task.status, "days": task.days, "week_id": task.week_id, "description": task.description}
         else:
             raise UserNotFoundException("Task not found")
 
-    def edit_task(self, task_id, task_text=None, status=None, days=None):
+    def edit_task(self, task_id, task_text=None, status=None, days=None, description=None):
         task = self.mysql_connection.session.query(Tasks).filter_by(id=task_id).first()
         if task:
             if not(task_text is None) and task.task != task_text:
@@ -91,6 +101,8 @@ class DbInteraction:
                 task.status = status
             if not(days is None) and task.days != days:
                 task.days = days[:]
+            if not(description is None) and task.description != description:
+                task.description = description
             return self.get_task(task_id=task_id)
         raise UserNotFoundException("Task not found")
     
@@ -110,3 +122,17 @@ class DbInteraction:
         week = self.mysql_connection.session.query(Weeks).filter_by(date=date).first()
         tasks = self.mysql_connection.session.query(Tasks).filter_by(week_id=week.id).all()
         return tasks
+
+if __name__ == "__main__":
+    db = DbInteraction(
+        host="127.0.0.1",
+        port=3306,
+        user="root",
+        password="pass",
+        db_name="planner_db",
+        rebuild_db=True
+    )
+    week = db.create_week("2021-08-16")
+    task = db.create_task(task="Hello world!", week_id=week["id"])
+    db.edit_task(task_id=task["id"], status=1, days=[1,0,1,0,1,0,1], task_text="Hello Earth!")
+    db.edit_week(date="2021-08-16", tr_order=[1, 0, 2], l_order=[[1, 0], [2], []])
