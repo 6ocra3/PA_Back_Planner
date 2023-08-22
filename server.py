@@ -15,7 +15,7 @@ class Server:
     def __init__(self):
         self.app = Flask(__name__)
         CORS(self.app, origins=["https://planner-gray.vercel.app", "http://localhost:5173"])
-        rebuild_db=True
+        rebuild_db=False
         self.db = DbInteraction(
         host="6ocra3.mysql.pythonanywhere-services.com",
         user="6ocra3",
